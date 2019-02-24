@@ -31,7 +31,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>2138415919</Checksum>
+        <Checksum>3423481476</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -162,7 +162,9 @@
         <Count>0</Count>
     </Breakpoints2>
     <Aliases>
-        <Count>0</Count>
+        <A0>_ "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT-Module_IAR\src\apps\main.c" ""</A0>
+        <A1>_ "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT-Module_IAR\src\boards\CNICG-Module\cmsis\system_stm32l1xx.c" ""</A1>
+        <Count>2</Count>
         <SuppressDialog>0</SuppressDialog>
     </Aliases>
 </settings>

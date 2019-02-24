@@ -258,25 +258,58 @@ void dataRateHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
 }
 
 bool AT_setADR(uint8_t buff) {
-    bool tmp;
+    bool flag;
     if( buff == 0 )
-        tmp = false;
+        flag = false;
     else if( buff == 1 ) 
-        tmp = true;
+        flag = true;
     else 
         return false;
     
     mibReq.Type = MIB_ADR;
-    mibReq.Param.AdrEnable = tmp;
+    mibReq.Param.AdrEnable = flag;
     LoRaMacMibSetRequestConfirm( &mibReq );
-    return true;
-       
-    
+    return true;   
 }
 
 /** adjust DataRate Handler, LoRaWAN ADR control */
 void adjustDataRateHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
-    AT_respString( "ADR", "OK" );
+    T_STORAGE_buff *ptr;
+    char tmp[256] = {0};
+    uint8_t type = 0;
+    uint8_t index = 0;
+    char* status[2] = {"OFF", "ON"}; 
+    if( *flag  == _AT_GET_EQUAL_QUESTION | *flag  == _AT_GET_QUESTION | *flag  == _AT_GET_EXEC ) {
+        if( AdrStatus == 0 )
+            strncat(tmp, "OFF", 2);
+        else
+            strncat(tmp, "ON", 3);
+        AT_respString( "ADR", tmp );
+    } else if( *flag  == _AT_SET_EQUAL ) {
+        index = AT_getParam( resp, tmp, index );
+        if( index != 0 ) {
+            AT_respErrcode( "ADR", _AT_NB_PARAMS_INVALID );
+            SET_AT_IDLE();
+            return;
+        }
+        if( strncasecmp( status[0], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = 0;
+        } else if( strncasecmp( status[1], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = 1;
+        } else {
+            AT_respErrcode( "ADR", _AT_CONTENT_PARAMS_INVALID );
+            SET_AT_IDLE();
+            return;
+        }
+        AT_setADR(type);
+        AdrStatus = type;
+        ptr = &storageBuff[TYPE_DEVADDR];
+        eepromWriteBuffer(ptr);
+        AT_respString( "ADR", status[type] );       
+    } else {
+        AT_respErrcode("ADR", _AT_UNKNOWN_ERROR);
+    }
+    
     SET_AT_IDLE();
 }
 
