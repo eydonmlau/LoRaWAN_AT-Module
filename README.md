@@ -1,5 +1,5 @@
 # LoRaWAN_AT-Module
-**This is developing and not completed yet**
+**This Project is developing and not completed yet**
 
 
 LoRaWAN AT Module is [LoRaWAN](http://lora-alliance.org) compatible device, which supports flexible LoRaWAN communication. 
