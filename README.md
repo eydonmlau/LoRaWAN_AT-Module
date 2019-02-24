@@ -1,10 +1,11 @@
-# LoRaWAN_AT-Module
+# LoRaWAN AT Module
 **This Project is developing and not completed yet**
 
 
-LoRaWAN AT Module is [LoRaWAN](http://lora-alliance.org) compatible device, which supports flexible LoRaWAN communication. <br/>
-This document is intended to describe a command interface implementation of LoRaWAN Class A/C protocol(Class B not supported yet). <br/>
-LoRaWAN protocol is available from LoRa Aliance, it is recommended to review LoRaWAN specification before using LoRaWAN modem.
+LoRaWAN AT Module is LoRaWAN compatible device, which supports flexible LoRaWAN communication. <br/>
+LoRaWAN protocol is available from LoRa Aliance, it is recommended to review [LoRaWAN]((http://lora-alliance.org)) specification before using LoRaWAN AT Module.
+
+## OverView
 
 **Finish Command:**  *Not Tested yet*<br/>
 AT<br/>
@@ -32,6 +33,18 @@ AT+CLASS<br/>
 AT+JOIN<br/>
 AT+DELAY<br/>
 
-[AT Command Specification](./Doc/LoRaWAN AT Command Specification.md) will update later.
+## Documentation
+[AT Command Specification](./Doc/LoRaWAN_AT_Command_Specification.md) will update later.
 
-Welcome to issue.
+## Supported Module
+This project currently provides support for CNICG-AT_Module,it will support other platforms.
+
+* CNICG-AT_Module
+  * [CNICG-AT_Module documentation](./Doc/CNICG-AT_Module)
+
+## Author
+Eydonm Lau <br/>
+[github](https://github.com/eydonmlau) | [cnblogs](https://www.cnblogs.com/eydonmlau/)
+
+-----
+<font size=4>Welcome to issue and contribute!</font>
