@@ -13,10 +13,11 @@ static uint8_t AppKey[]         =       LORAWAN_APPLICATION_KEY;
 static uint8_t AppSKey[]        =       LORAWAN_APPSKEY;
 static uint8_t NWKSKey[]        =       LORAWAN_NWKSKEY;
 static uint32_t Addr            =       LORAWAN_DEVICE_ADDRESS;
-static uint8_t DevAddr[]        =       {0};
+static uint8_t DevAddr[4]        =       {0};
 static uint8_t Version[]        =       {1,0,0};                        //major, minor, patch
-uint8_t InitalizeFactory        =       1;
+uint8_t InitalizeFactory        =       1;                              //0 means first time to  flash MCU
 static uint8_t AdrStatus        =       1;
+static uint8_t AppPort          =       2;
 MibRequestConfirm_t mibReq;
 
 T_STORAGE_buff storageBuff[] = {
@@ -27,7 +28,8 @@ T_STORAGE_buff storageBuff[] = {
     {   NWKSKey,        NWKSKEY_FLASH_ADDRESS,       NWKSKEY_FACTORY_FLASH_ADDRESS,       TYPE_NWKSKEY,         NWKSKEY_MAX_SIZE,       false   },
     {   DevAddr,        DEVADDR_FLASH_ADDRESS,       DEVADDR_FACTORY_FLASH_ADDRESS,       TYPE_DEVADDR,         DEVADDR_MAX_SIZE,       false   },
     {   Version,        VERSION_FLASH_ADDRESS,       VERSION_FACTORY_FLASH_ADDRESS,       TYPE_VERSION,         VERSION_MAX_SIZE,       false   },
-    {   &AdrStatus,      ADRSTATUS_FLASH_ADDRESS,     ADRSTATUS_FACTORY_FLASH_ADDRESS,     TYPE_ADRSTATUS,       ADRSTATUS_MAX_SIZE,     false   },
+    {   &AdrStatus,     ADRSTATUS_FLASH_ADDRESS,     ADRSTATUS_FACTORY_FLASH_ADDRESS,     TYPE_ADRSTATUS,       ADRSTATUS_MAX_SIZE,     false   },
+    {   &AppPort,       APPPORT_FLASH_ADDRESS,       APPPORT_FACTORY_FLASH_ADDRESS,       TYPE_APPPORT,         APPPORT_MAX_SIZE,       false   },
     
 };
 
@@ -70,6 +72,9 @@ void VariablesInit( ) {
         ptr = &storageBuff[TYPE_ADRSTATUS];
         eepromWriteFactoryDefault(ptr);
         
+        ptr = &storageBuff[TYPE_APPPORT];
+        eepromWriteFactoryDefault(ptr);
+        
         factoryDefaultSetting( );
         
     } else {
@@ -85,9 +90,11 @@ void VariablesInit( ) {
     
         eepromReadBuffer( &storageBuff[TYPE_DEVADDR] );
     
-        eepromReadBuffer( &storageBuff[TYPE_VERSION] );   
+        eepromReadBuffer( &storageBuff[TYPE_VERSION] ); 
         
         eepromReadBuffer( &storageBuff[TYPE_ADRSTATUS] ); 
+        
+        eepromReadBuffer( &storageBuff[TYPE_APPPORT] ); 
     }
 }
 
@@ -157,6 +164,8 @@ static void factoryDefaultSetting() {
         
         eepromReadFactoryDefaultBuffer( &storageBuff[TYPE_ADRSTATUS] );
         
+        eepromReadFactoryDefaultBuffer( &storageBuff[TYPE_APPPORT] );
+        
         ptr = &storageBuff[TYPE_DEVEUI];
         eepromWriteBuffer(ptr);
         
@@ -179,6 +188,9 @@ static void factoryDefaultSetting() {
         eepromWriteBuffer(ptr);
         
         ptr = &storageBuff[TYPE_ADRSTATUS];
+        eepromWriteBuffer(ptr);
+        
+        ptr = &storageBuff[TYPE_APPPORT];
         eepromWriteBuffer(ptr);
 }
 
@@ -251,12 +263,14 @@ void channelHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
     SET_AT_IDLE();
 }
 
+
 /** dataRate Handler, LoRaWAN datarate */
 void dataRateHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
     AT_respString( "DR", "OK" );
     SET_AT_IDLE();
 }
 
+/** set ADR into LoRaMac status  */
 bool AT_setADR(uint8_t buff) {
     bool flag;
     if( buff == 0 )
@@ -281,9 +295,9 @@ void adjustDataRateHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
     char* status[2] = {"OFF", "ON"}; 
     if( *flag  == _AT_GET_EQUAL_QUESTION | *flag  == _AT_GET_QUESTION | *flag  == _AT_GET_EXEC ) {
         if( AdrStatus == 0 )
-            strncat(tmp, "OFF", 2);
+            strncat(tmp, "OFF", 3);
         else
-            strncat(tmp, "ON", 3);
+            strncat(tmp, "ON", 2);
         AT_respString( "ADR", tmp );
     } else if( *flag  == _AT_SET_EQUAL ) {
         index = AT_getParam( resp, tmp, index );
@@ -291,6 +305,11 @@ void adjustDataRateHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
             AT_respErrcode( "ADR", _AT_NB_PARAMS_INVALID );
             SET_AT_IDLE();
             return;
+        }
+        if( AT_strQuotation( tmp ) ) {                      //check double quotation
+                AT_respErrcode( "ADR", _AT_CONTENT_PARAMS_INVALID );
+                SET_AT_IDLE();
+                return;
         }
         if( strncasecmp( status[0], (const char*)tmp , strlen( tmp ) ) == 0 ) {
             type = 0;
@@ -337,10 +356,70 @@ void rxWindow1Handler( char *resp, uint8_t *flag, uint8_t *cnt ) {
     SET_AT_IDLE();
 }
 
+
 /** port Handler, LoRaWAN communication port */
 void portHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
-    AT_respString( "PORT", "OK" );
+    T_STORAGE_buff *ptr;
+    char tmp[256] = {0};
+    uint8_t index = 0;
+    int buff = 0;
+    if( *flag  == _AT_GET_EQUAL_QUESTION | *flag  == _AT_GET_QUESTION | *flag  == _AT_GET_EXEC ) {
+        snprintf(tmp, 256, "%d", AppPort);
+        AT_respString( "PORT", tmp );
+    } else if( *flag  == _AT_SET_EQUAL ) {
+        index = AT_getParam( resp, tmp, index );
+        if( index != 0 ) {
+            AT_respErrcode( "PORT", _AT_NB_PARAMS_INVALID );
+            SET_AT_IDLE();
+            return;
+        }
+        if( AT_strQuotation( tmp ) ) {                      //check double quotation
+                AT_respErrcode( "PORT", _AT_CONTENT_PARAMS_INVALID );
+                SET_AT_IDLE();
+                return;
+        }
+        uint8_t len = strlen( tmp );
+        if( len > 3 ) {
+            AT_respErrcode( "PORT", _AT_CONTENT_PARAMS_INVALID );
+            SET_AT_IDLE( );
+            return;
+        }
+        if( sscanf( tmp, "%3d", &buff )  == 0 ) {
+            AT_respErrcode( "PORT", _AT_CONTENT_PARAMS_INVALID );
+            SET_AT_IDLE();
+            return;
+        }
+        if(buff > 255) {
+            AT_respErrcode( "PORT", _AT_CONTENT_PARAMS_INVALID );
+            SET_AT_IDLE();
+            return;
+        }
+        AppPort = buff;
+        ptr = &storageBuff[TYPE_APPPORT];
+        eepromWriteBuffer(ptr);
+        memset(tmp, 0, 256);
+        snprintf(tmp, 256, "%d", AppPort);
+        AT_respString( "PORT", tmp );       
+    } else {
+        AT_respErrcode("PORT", _AT_UNKNOWN_ERROR);
+    }
+    
     SET_AT_IDLE();
+}
+
+/** set DevAddr into LoRaMac status  */
+static bool AT_setDevAddr( uint8_t *buff ){
+    mibReq.Type = MIB_DEV_ADDR;
+    mibReq.Param.DevAddr = buff[0] << 24 | buff[1] << 16 | buff[2] << 8 | buff[3];
+    if(  LoRaMacMibSetRequestConfirm( &mibReq )  == LORAMAC_STATUS_OK ) {
+        /**  change devaddr should join again otherwise AT module will lost the following confirmed data ack or another things */
+        mibReq.Type = MIB_NETWORK_JOINED;                       
+        mibReq.Param.IsNetworkJoined = false;
+        LoRaMacMibSetRequestConfirm( &mibReq );
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /** id Handler, LoRaWAN DevAddr / DevEUI / appEUI */
@@ -426,8 +505,14 @@ void idHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
                     return;
                 }
                 if( count == 4 ) {
+                    if( !AT_setDevAddr( (uint8_t *)buff ) ) {
+                        AT_respErrcode( "ID", _AT_PARAMS_INVALID );
+                        SET_AT_IDLE( );
+                        return;
+                    }
                     for(int i = 0; i < 4; i++)
                         DevAddr[i] = buff[i];
+
                     ptr = &storageBuff[TYPE_DEVADDR];
                     eepromWriteBuffer(ptr);
                     snprintf( ret, 256, "DevAddr, %02x:%02x:%02x:%02x",                                 \
@@ -498,6 +583,36 @@ void idHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
         AT_respErrcode("ID", _AT_UNKNOWN_ERROR);
     }
     SET_AT_IDLE();
+}
+
+/** set NWKSKey into LoRaMac status  */
+static bool AT_setNWKSKey( uint8_t *buff ){
+    mibReq.Type = MIB_NWK_SKEY;
+    mibReq.Param.NwkSKey = buff;
+    if(  LoRaMacMibSetRequestConfirm( &mibReq )  == LORAMAC_STATUS_OK ) {
+        /**  change NWKSKey should join again otherwise AT module will lost the following confirmed data ack or another things */
+        mibReq.Type = MIB_NETWORK_JOINED;                       
+        mibReq.Param.IsNetworkJoined = false;
+        LoRaMacMibSetRequestConfirm( &mibReq );
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/** set AppSKey into LoRaMac status  */
+static bool AT_setAppSKey( uint8_t *buff ){
+    mibReq.Type = MIB_APP_SKEY;
+    mibReq.Param.AppSKey = buff;
+    if(  LoRaMacMibSetRequestConfirm( &mibReq )  == LORAMAC_STATUS_OK ) {
+        /**  change NWKSKey should join again otherwise AT module will lost the following confirmed data ack or another things */
+        mibReq.Type = MIB_NETWORK_JOINED;                       
+        mibReq.Param.IsNetworkJoined = false;
+        LoRaMacMibSetRequestConfirm( &mibReq );
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /** keyHandler, LoRaWAN NWKSKEY / APPSKEY / APPKEY */
@@ -619,6 +734,11 @@ void keyHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
                     return;
                 }
                 if( count == 16 ) {
+                    if( !AT_setNWKSKey( ( uint8_t * )buff ) ) {
+                        AT_respErrcode( "ID", _AT_PARAMS_INVALID );
+                        SET_AT_IDLE( );
+                        return;
+                    }
                     for(int i = 0; i < 16; i++)
                         NWKSKey[i] = buff[i];
                     ptr = &storageBuff[TYPE_NWKSKEY];
@@ -648,6 +768,11 @@ void keyHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
                     return;
                 }
                 if( count == 16 ) {
+                    if( !AT_setAppSKey( ( uint8_t * )buff ) ) {
+                        AT_respErrcode( "ID", _AT_PARAMS_INVALID );
+                        SET_AT_IDLE( );
+                        return;
+                    }
                     for(int i = 0; i < 16; i++)
                         AppSKey[i] = buff[i];
                     ptr = &storageBuff[TYPE_APPSKEY];

@@ -21,7 +21,8 @@ typedef struct
 #define TYPE_NWKSKEY                            4
 #define TYPE_DEVADDR                            5
 #define TYPE_VERSION                            6
-#define TYPE_ADRSTATUS                          6
+#define TYPE_ADRSTATUS                          7
+#define TYPE_APPPORT                            8
 
 /** Buffer Max Size Define */
 #define DEVEUI_MAX_SIZE                         8
@@ -31,7 +32,8 @@ typedef struct
 #define NWKSKEY_MAX_SIZE                        16
 #define DEVADDR_MAX_SIZE                        4
 #define VERSION_MAX_SIZE                        3
-#define ADRSTATUS_MAX_SIZE                      3
+#define ADRSTATUS_MAX_SIZE                      1
+#define APPPORT_MAX_SIZE                        1
 
 /** Variables Init , Initialize gloable variables from eeprom when program start */
 void VariablesInit( );
