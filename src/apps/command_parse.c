@@ -193,7 +193,7 @@ uint8_t AT_getParam( char *pIn, char *pOut, uint8_t index) {
 }
 
 /*
- *  @brief check buffer is valid , contain CRLF  or not, if so delete CRLF
+ *  @brief check buffer is valid , contain CRLF  or not, if so delete LF
  * 
  */ 
 static bool AT_checkCRLF( char* buffer ) {

@@ -31,7 +31,7 @@
 #include "uart-board.h"
 #include "string.h"
 #include "delay.h"
-#include "command_parse.h"     
+#include "command_parse.h"
 
 extern Uart_t Uart1;
 
@@ -114,7 +114,7 @@ static uint8_t AppPort = LORAWAN_APP_PORT;
  * User application data size
  */
 static uint8_t AppDataSize = 16;
-
+static uint8_t AppDataSizeBackup = 16;
 /*!
  * User application data buffer size
  */
@@ -139,6 +139,7 @@ static uint32_t TxDutyCycleTime;
  * Timer to handle the application data transmission duty cycle
  */
 static TimerEvent_t TxNextPacketTimer;
+
 
 /*!
  * Indicates if a new packet can be sent
@@ -183,7 +184,7 @@ static void PrepareTxFrame( uint8_t port )
     {
     case 2:
         
-        AppDataSize = 16;
+        AppDataSizeBackup = AppDataSize = 16;
         AppData[0] = 0x01;
         AppData[1] = 0x02;
         AppData[2] = 0x03;
@@ -493,8 +494,13 @@ int main( void )
     BoardInitPeriph( );
     AT_cmdInit( );
     VariablesInit( );
-
-    DeviceState = DEVICE_STATE_INIT;
+   
+    LoRaMacPrimitives.MacMcpsConfirm = McpsConfirm;
+    LoRaMacPrimitives.MacMcpsIndication = McpsIndication;
+    LoRaMacPrimitives.MacMlmeConfirm = MlmeConfirm;
+    LoRaMacPrimitives.MacMlmeIndication = MlmeIndication;
+    LoRaMacCallbacks.GetBatteryLevel = BoardGetBatteryLevel;
+    LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, ACTIVE_REGION );
 
     while( 1 )
     {
@@ -505,6 +511,5 @@ int main( void )
         memset(UartData, 0, MAX_RX_BUFF_SIZE);
         UartGetFrame( &Uart1, UartData, &nbReadBytes );
         commandParse( (char *)UartData );   
-        
     }
 }

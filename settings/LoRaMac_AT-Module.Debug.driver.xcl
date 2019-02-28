@@ -6,11 +6,11 @@
 
 "-p" 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CONFIG\debugger\ST\STM32L151CB.ddf" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CONFIG\debugger\ST\STM32L151C8.ddf" 
 
 "--semihosting" 
 
-"--device=STM32L151CB" 
+"--device=STM32L151C8" 
 
 "--drv_communication=USB0" 
 

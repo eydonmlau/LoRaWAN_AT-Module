@@ -5,6 +5,7 @@
 #include "board.h"
 #include "utilities.h"
 #include "LoRaMac.h"
+#include "Region.h"
 
 
 static uint8_t DevEui[]         =       LORAWAN_DEVICE_EUI;
@@ -15,9 +16,11 @@ static uint8_t NWKSKey[]        =       LORAWAN_NWKSKEY;
 static uint32_t Addr            =       LORAWAN_DEVICE_ADDRESS;
 static uint8_t DevAddr[4]        =       {0};
 static uint8_t Version[]        =       {1,0,0};                        //major, minor, patch
-uint8_t InitalizeFactory        =       1;                              //0 means first time to  flash MCU
+uint8_t InitalizeFactory        =       0;                              //0 means first time to  flash MCU
 static uint8_t AdrStatus        =       1;
 static uint8_t AppPort          =       2;
+static uint8_t DataRate         =       DR_0;
+
 MibRequestConfirm_t mibReq;
 
 T_STORAGE_buff storageBuff[] = {
@@ -30,6 +33,7 @@ T_STORAGE_buff storageBuff[] = {
     {   Version,        VERSION_FLASH_ADDRESS,       VERSION_FACTORY_FLASH_ADDRESS,       TYPE_VERSION,         VERSION_MAX_SIZE,       false   },
     {   &AdrStatus,     ADRSTATUS_FLASH_ADDRESS,     ADRSTATUS_FACTORY_FLASH_ADDRESS,     TYPE_ADRSTATUS,       ADRSTATUS_MAX_SIZE,     false   },
     {   &AppPort,       APPPORT_FLASH_ADDRESS,       APPPORT_FACTORY_FLASH_ADDRESS,       TYPE_APPPORT,         APPPORT_MAX_SIZE,       false   },
+    {   &DataRate,      DATARATE_FLASH_ADDRESS,      DATARATE_FACTORY_FLASH_ADDRESS,      TYPE_DATARATE,        DATARATE_MAX_SIZE,       false   },
     
 };
 
@@ -75,6 +79,9 @@ void VariablesInit( ) {
         ptr = &storageBuff[TYPE_APPPORT];
         eepromWriteFactoryDefault(ptr);
         
+        ptr = &storageBuff[TYPE_DATARATE];
+        eepromWriteFactoryDefault(ptr);
+        
         factoryDefaultSetting( );
         
     } else {
@@ -95,6 +102,8 @@ void VariablesInit( ) {
         eepromReadBuffer( &storageBuff[TYPE_ADRSTATUS] ); 
         
         eepromReadBuffer( &storageBuff[TYPE_APPPORT] ); 
+        
+        eepromReadBuffer( &storageBuff[TYPE_DATARATE] ); 
     }
 }
 
@@ -166,6 +175,8 @@ static void factoryDefaultSetting() {
         
         eepromReadFactoryDefaultBuffer( &storageBuff[TYPE_APPPORT] );
         
+        eepromReadFactoryDefaultBuffer( &storageBuff[TYPE_DATARATE] );
+        
         ptr = &storageBuff[TYPE_DEVEUI];
         eepromWriteBuffer(ptr);
         
@@ -191,6 +202,9 @@ static void factoryDefaultSetting() {
         eepromWriteBuffer(ptr);
         
         ptr = &storageBuff[TYPE_APPPORT];
+        eepromWriteBuffer(ptr);
+        
+        ptr = &storageBuff[TYPE_DATARATE];
         eepromWriteBuffer(ptr);
 }
 
@@ -263,10 +277,120 @@ void channelHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
     SET_AT_IDLE();
 }
 
+/** set DataRate into LoRaMac status  */
+bool AT_setDataRate(uint8_t buff) {  
+    mibReq.Type = MIB_CHANNELS_DATARATE;
+    mibReq.Param.ChannelsDatarate = buff;
+    if( LoRaMacMibSetRequestConfirm( &mibReq ) == LORAMAC_STATUS_OK ) {
+        return true;
+    }
+    return false;   
+}
+
+/** get LoRaMac status DataRate into DataRate  */
+bool AT_getDataRate(uint8_t *tmp) {
+    mibReq.Type = MIB_CHANNELS_DATARATE;
+    if( LoRaMacMibSetRequestConfirm( &mibReq ) == LORAMAC_STATUS_OK ) {
+        DataRate = mibReq.Param.ChannelsDatarate;
+        return true;
+    }
+    return false;   
+}
 
 /** dataRate Handler, LoRaWAN datarate */
 void dataRateHandler( char *resp, uint8_t *flag, uint8_t *cnt ) {
-    AT_respString( "DR", "OK" );
+    T_STORAGE_buff *ptr;
+    char tmp[256] = {0};
+    uint8_t type = 0;
+    uint8_t index = 0;
+    char* params[17] = {"SCHEME", "DR0", "DR1", "DR2", "DR3", "DR4", "DR5", "DR6", "DR7", "DR8", "DR9", "DR10", "DR11", "DR12", "DR13", "DR14", "DR15"}; 
+    if( *flag  == _AT_GET_EQUAL_QUESTION | *flag  == _AT_GET_QUESTION | *flag  == _AT_GET_EXEC ) {
+        snprintf(tmp, 256, "DR%d", DataRate );
+        AT_respString( "DR", tmp );
+    } else if( *flag  == _AT_SET_EQUAL ) {
+        index = AT_getParam( resp, tmp, index );
+        if( index != 0 ) {
+            AT_respErrcode( "ADR", _AT_NB_PARAMS_INVALID );
+            SET_AT_IDLE();
+            return;
+        }
+        if( AT_strQuotation( tmp ) ) {                      //check double quotation
+                AT_respErrcode( "ADR", _AT_CONTENT_PARAMS_INVALID );
+                SET_AT_IDLE();
+                return;
+        }
+        if( strncasecmp( params[0], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            AT_respString( "DR", "CN470" );
+            AT_respString( "DR0", "CN470  DR0  SF12  BW125K" );
+            AT_respString( "DR1", "CN470  DR1  SF11  BW125K" );
+            AT_respString( "DR2", "CN470  DR2  SF10  BW125K" );
+            AT_respString( "DR3", "CN470  DR3  SF9   BW125K" );
+            AT_respString( "DR4", "CN470  DR4  SF8   BW125K" );
+            AT_respString( "DR5", "CN470  DR5  SF7   BW125K" );
+            AT_respString( "DR6", "CN470  RFU" );
+            AT_respString( "DR7", "CN470  RFU" );
+            AT_respString( "DR8", "CN470  RFU" );
+            AT_respString( "DR9", "CN470  RFU" );
+            AT_respString( "DR10", "CN470  RFU" );
+            AT_respString( "DR11", "CN470  RFU" );
+            AT_respString( "DR12", "CN470  RFU" );
+            AT_respString( "DR13", "CN470  RFU" );
+            AT_respString( "DR14", "CN470  RFU" );
+            AT_respString( "DR15", "DEFINED IN LORAWAN" );
+            SET_AT_IDLE();
+            return;
+        } else if( strncasecmp( params[1], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_0;
+        } else if( strncasecmp( params[2], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_1;
+        } else if( strncasecmp( params[3], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_2;
+        } else if( strncasecmp( params[4], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_3;
+        } else if( strncasecmp( params[5], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_4;
+        } else if( strncasecmp( params[6], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_5;
+        } else if( strncasecmp( params[7], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_6;
+        } else if( strncasecmp( params[8], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_7;
+        } else if( strncasecmp( params[9], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_8;
+        } else if( strncasecmp( params[10], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_9;
+        } else if( strncasecmp( params[11], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_10;
+        } else if( strncasecmp( params[12], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_11;
+        } else if( strncasecmp( params[13], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_12;
+        } else if( strncasecmp( params[14], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_13;
+        } else if( strncasecmp( params[15], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_14;
+        } else if( strncasecmp( params[16], (const char*)tmp , strlen( tmp ) ) == 0 ) {
+            type = DR_15;
+        } else {
+            AT_respErrcode( "ADR", _AT_CONTENT_PARAMS_INVALID );
+            SET_AT_IDLE();
+            return;
+        }
+        if( AT_setDataRate(type) ) {
+            DataRate = type;
+            ptr = &storageBuff[TYPE_DEVADDR];
+            eepromWriteBuffer(ptr);
+            snprintf(tmp, 256, "DR%d", DataRate );
+            AT_respString( "DR", tmp );
+        } else {
+            AT_respErrcode("ADR", _AT_PARAMS_INVALID);
+            AT_respString( "DR", "CHECK SCHEME" );
+        }
+     
+    } else {
+        AT_respErrcode("ADR", _AT_UNKNOWN_ERROR);
+    }
+    
     SET_AT_IDLE();
 }
 
@@ -282,8 +406,10 @@ bool AT_setADR(uint8_t buff) {
     
     mibReq.Type = MIB_ADR;
     mibReq.Param.AdrEnable = flag;
-    LoRaMacMibSetRequestConfirm( &mibReq );
-    return true;   
+    if( LoRaMacMibSetRequestConfirm( &mibReq ) == LORAMAC_STATUS_OK ) {
+        return true;
+    }
+    return true; 
 }
 
 /** adjust DataRate Handler, LoRaWAN ADR control */

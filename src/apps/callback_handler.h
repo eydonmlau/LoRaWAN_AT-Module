@@ -23,6 +23,7 @@ typedef struct
 #define TYPE_VERSION                            6
 #define TYPE_ADRSTATUS                          7
 #define TYPE_APPPORT                            8
+#define TYPE_DATARATE                           9
 
 /** Buffer Max Size Define */
 #define DEVEUI_MAX_SIZE                         8
@@ -34,6 +35,7 @@ typedef struct
 #define VERSION_MAX_SIZE                        3
 #define ADRSTATUS_MAX_SIZE                      1
 #define APPPORT_MAX_SIZE                        1
+#define DATARATE_MAX_SIZE                       1
 
 /** Variables Init , Initialize gloable variables from eeprom when program start */
 void VariablesInit( );

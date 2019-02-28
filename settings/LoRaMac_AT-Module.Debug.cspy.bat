@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT-Module\settings\LoRaMac_AT-Module.Debug.general.xcl" --backend -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT-Module\settings\LoRaMac_AT-Module.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT_Module\settings\LoRaMac_AT-Module.Debug.general.xcl" --backend -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT_Module\settings\LoRaMac_AT-Module.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT-Module\settings\LoRaMac_AT-Module.Debug.general.xcl" "--debug_file=%~1" --backend -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT-Module\settings\LoRaMac_AT-Module.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT_Module\settings\LoRaMac_AT-Module.Debug.general.xcl" "--debug_file=%~1" --backend -f "G:\liuyuandong\Project\2019\Work\AT_Module\LoRaMac_AT_Module\settings\LoRaMac_AT-Module.Debug.driver.xcl" 
 
 @echo off 
 :end

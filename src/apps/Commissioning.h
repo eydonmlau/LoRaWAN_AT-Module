@@ -38,7 +38,7 @@
  * IEEE Organizationally Unique Identifier ( OUI ) (big endian)
  * \remark This is unique to a company or organization
  */
-#define IEEE_OUI                                    0x33, 0x44, 0x55
+#define IEEE_OUI                                    0x00, 0x00, 0x00
 
 /*!
  * Mote device IEEE EUI (big endian)
@@ -51,7 +51,7 @@
 /*!
  * Application IEEE EUI (big endian)
  */
-#define LORAWAN_APPLICATION_EUI                     { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff }
+#define LORAWAN_APPLICATION_EUI                     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
 /*!
  * AES encryption/decryption cipher application key
@@ -70,7 +70,7 @@
  *         a pseudo random generator seeded with a value derived from
  *         BoardUniqueId value if LORAWAN_DEVICE_ADDRESS is set to 0
  */
-#define LORAWAN_DEVICE_ADDRESS                      ( uint32_t )0x12345678
+#define LORAWAN_DEVICE_ADDRESS                      ( uint32_t )0x00000000
 
 /*!
  * AES encryption/decryption cipher network session key

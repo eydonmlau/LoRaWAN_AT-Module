@@ -78,7 +78,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>STM32L151CB	ST STM32L151CB</state>
+                    <state>STM32L151C8	ST STM32L151C8</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -138,7 +138,7 @@
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>STM32L151CB	ST STM32L151CB</state>
+                    <state>STM32L151C8	ST STM32L151C8</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -780,7 +780,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\ST\stm32l151xB.icf</state>
+                    <state>$TOOLKIT_DIR$\config\linker\ST\stm32l151x8.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2191,10 +2191,43 @@
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal.c</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_adc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_adc_ex.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_comp.c</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_cortex.c</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_crc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_cryp.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_cryp_ex.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_dac.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_dac_ex.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_dma.c</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_flash.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_flash_ex.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_flash_ramfunc.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_gpio.c</name>
@@ -2203,7 +2236,34 @@
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_i2c.c</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_i2s.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_irda.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_iwdg.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_lcd.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_msp_template.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_nor.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_opamp.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_opamp_ex.c</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_pcd.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_pcd_ex.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_pwr.c</name>
@@ -2224,16 +2284,88 @@
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_rtc_ex.c</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_sd.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_smartcard.c</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_spi.c</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_spi_ex.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_sram.c</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_tim.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_tim_ex.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_uart.c</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_usart.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_wwdg.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_adc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_comp.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_crc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_dac.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_dma.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_exti.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_fsmc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_gpio.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_i2c.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_opamp.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_pwr.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_rcc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_rtc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_sdmmc.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_spi.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_tim.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_usart.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\src\boards\mcu\stm32\STM32L1xx_HAL_Driver\Src\stm32l1xx_ll_utils.c</name>
                         </file>
                     </group>
                 </group>
